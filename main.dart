@@ -79,9 +79,19 @@ class _BillSplitterScreenState extends State<BillSplitterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.deepPurple[200],
       appBar: AppBar(
-      title: Text("Splitter"
-      style: TextStyle(color: Colors.blue),),
+        backgroundColor: Colors.black,
+        title: Center(
+          child: Text(
+            "Splitter",
+            style: TextStyle(
+              color: Colors.blue,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.refresh),
@@ -95,46 +105,65 @@ class _BillSplitterScreenState extends State<BillSplitterScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(
-              controller: participantController,
-              decoration: InputDecoration(
-                labelText: 'Add Participant',
-                border: OutlineInputBorder(),
-              ),
+      body: ListView(
+        padding: EdgeInsets.all(150),
+        children: [
+          TextField(
+            controller: participantController,
+            decoration: InputDecoration(
+              labelText: 'Add People',
+              border: OutlineInputBorder(),
             ),
-            ElevatedButton(
+          ),
+          SizedBox(
+            width: 20,
+            child: ElevatedButton(
               onPressed: _addParticipant,
-              child: Text('Add Participant'),
+              child: Text('Store'),
             ),
-            SizedBox(height: 10),
-            Text('Participants: ${participants.join(', ')}'),
-            SizedBox(height: 20),
-            TextField(
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Enter Total Bill Amount',
-                border: OutlineInputBorder(),
+          ),
+          SizedBox(height: 10),
+          Text(
+            'People: ${participants.join(', ')}',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 20),
+          TextField(
+            controller: amountController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Enter Total Bill Amount',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: _addExpense,
+            child: Text('Split Bill Equally'),
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Amount each person owes:',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          ...participants.map((person) {
+            double amount = amounts[person] ?? 0.0;
+            return ListTile(
+              title: Text(
+                '$person owes ₹${amount.toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: _addExpense,
-              child: Text('Split Bill Equally'),
-            ),
-            SizedBox(height: 10),
-            Text('Amount each person owes:'),
-            ...participants.map((person) {
-              double amount = amounts[person] ?? 0.0;
-              return ListTile(
-                title: Text('$person owes ₹${amount.toStringAsFixed(2)}'),
-              );
-            }).toList(),
-          ],
-        ),
+            );
+          }).toList(),
+        ],
       ),
     );
   }
